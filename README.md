@@ -1,5 +1,5 @@
 # LinkSniper
-Spider or repeater to find all links.
+Spider or repeater to find all links in Website.
 
 
 ## 
