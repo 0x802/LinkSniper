@@ -6,7 +6,7 @@ Spider or repeater to find all links.
 
 ## Use 
 ```bash
-python3 LinkSniper.py https://www.example.com
+python3 LinkSniper.py https://www.google.com
 ```
 ```text
 https://www.google.com/advanced_search?hl=en&authuser=0
