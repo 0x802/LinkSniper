@@ -56,7 +56,7 @@ def clear(data:str):
 
 def get_urls(Data:str, domain:str, cache:list):
     if not Data:
-        print(f"Data empty: {Data}")
+        # print(f"Data empty: {Data}")
         return []
 
     URLS = []
