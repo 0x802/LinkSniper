@@ -25,7 +25,7 @@ def SaveOutput(data:str, filename:str):
 def chack(url:str,domain:str):
     
     try:
-        if domain in extract(url).domain:return True
+        if domain in '.'.join([extract(url).domain, extract(url).suffix]):return True
         else:return False
     except Exception as err:return None
 
@@ -53,8 +53,10 @@ def clear(data:str):
 def get_urls(Data:str, domain:str, cache:list):
     if not Data:return list()
     URLS = []
-    domain_d= extract(domain).domain
-    html = BeautifulSoup(Data,'lxml')
+    domain_d  = extract(domain).domain
+    domain_ds = '.'.join([extract(domain).domain,extract(domain).suffix])
+
+    html     = BeautifulSoup(Data,'lxml')
 
     #TODO       Step [ 1 ]
     for _ in Targets_tags:
@@ -69,7 +71,7 @@ def get_urls(Data:str, domain:str, cache:list):
             #TODO       [ in scope and Url ]
             #TODO       if http[s]:[//]target.com OR http[s]:[//]targetHome.com OR  http[s]:[//]targetHome.com.us OR  http[s]:[//]target.us 
             #TODO       OR Subdomain ( target )
-            if chack(__, domain_d) == True:
+            if chack(__, domain_ds) == True:
                 fin = __.strip()
                 if __[0:2] == '//':
 
@@ -86,7 +88,7 @@ def get_urls(Data:str, domain:str, cache:list):
 
             #TODO       [ in scope and Path ]
             #TODO       if /path/path/etc... OR # or etc ...
-            elif chack(__, domain_d) == False and extract(__).suffix == '':
+            elif chack(__, domain_ds) == False and extract(__).suffix == '':
                 if not black_list(__, 0x0):
                     fin = __.strip()
 
@@ -102,7 +104,7 @@ def get_urls(Data:str, domain:str, cache:list):
 
             #TODO       [ Out Scope and ]
             #TODO       if https://akmskjnsjn.com OR //aksnkjnsjns.com == OUT SCOPE
-            elif chack(__, domain_d) == False and  extract(__).suffix != '':
+            elif chack(__, domain_ds) == False and  extract(__).suffix != '':
                 """
                 The URL is Out Scope 
                 """
@@ -119,7 +121,7 @@ def get_urls(Data:str, domain:str, cache:list):
         if black_list(link_list, 0x0):continue
         
         link_list= link_list[0:-1] if domain + '/' == link_list else link_list
-        if link_list not in cache and chack(link_list,domain):
+        if link_list not in cache and chack(link_list,domain_ds):
             URLS.append(link_list)
             cache.append(link_list)
             SaveOutput(link_list, extract(domain).domain+'-links.txt')
@@ -162,4 +164,6 @@ def main(target:str):
         WalletUrls , Registry= Registry, list()
         if not WalletUrls: break
 
-if __name__ == '__main__':main(sys.argv[1])
+if __name__ == '__main__':
+    if len(sys.argv) > 1:main(sys.argv[1])
+    else:exit(0)
