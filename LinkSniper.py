@@ -46,7 +46,7 @@ def black_list(src:str, status:str):
     return False
 
 def clear(data:str):
-    for i in ['\'', ';', ')', '(', '\"']:data = data.split(i)[0]
+    for i in ['\'', ';', ')', '(', '\"', ',']:data = data.split(i)[0]
     return data
 
 def get_urls(Data:str, domain:str, cache:list):
