@@ -23,7 +23,6 @@ def SaveOutput(data:str, filename:str):
     with open(str(Path('output',filename)) , 'a') as Out:Out.write(f'{data}\n')
 
 def chack(url:str,domain:str):
-    
     try:
         if domain in extract(url).fqdn:return True
         else:return False
@@ -42,7 +41,8 @@ def black_list(src:str, status:str):
         if  src in blacklist_path:return True
         else:
             if src[0:11] == 'javascript:':return True
-            elif src[0] == '#':return True
+            elif '#' in src :return True
+
     return False
 
 def clear(data:str):
@@ -131,7 +131,7 @@ def process(args=None,url:str=None,domain:str=None,cache:list=None):
     if args:url, domain, cache = args
 
     try:
-        Respons = get(url=url, timeout=3, verify=False, allow_redirects=True, headers={'user-agent':UserAgent})
+        Respons = get(url=url, timeout=5, verify=False, allow_redirects=True, headers={'user-agent':UserAgent})
 
         try:title = BeautifulSoup(Respons.text, 'lxml').findAll('title')[0].text 
         except: title = ''
@@ -149,10 +149,10 @@ def main(target:str):
     Cache = []
     Cache.append(target)
     WalletUrls = Cache
-
-    if not WalletUrls:exit(0) 
     Registry = []
     domain = target
+
+    if not WalletUrls:exit(0) 
 
     while True:
         with ProcessPoolExecutor(max_workers=25) as e:
