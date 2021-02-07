@@ -81,7 +81,7 @@ def get_urls(Data:str, domain:str, cache:list):
                 if fin not in cache and not black_list(fin, 0x0):
                     URLS.append(fin)
                     cache.append(fin)
-                    SaveOutput(fin, extract(domain).domain+'-links.txt')
+                    SaveOutput(fin, extract(domain).fqdn+'-links.txt')
                     print(fin)
 
             #TODO       [ in scope and Path ]
@@ -96,7 +96,7 @@ def get_urls(Data:str, domain:str, cache:list):
                     if fin not in cache: 
                         URLS.append(fin)
                         cache.append(fin)
-                        SaveOutput(fin, extract(domain).domain+'-links.txt')
+                        SaveOutput(fin, extract(domain).fqdn+'-links.txt')
                         print(fin)
 
 
@@ -122,7 +122,7 @@ def get_urls(Data:str, domain:str, cache:list):
         if link_list not in cache and chack(link_list,domain_ds):
             URLS.append(link_list)
             cache.append(link_list)
-            SaveOutput(link_list, extract(domain).domain+'-links.txt')
+            SaveOutput(link_list, extract(domain).fqdn+'-links.txt')
             print(link_list)
 
     return URLS
@@ -131,11 +131,11 @@ def process(args=None,url:str=None,domain:str=None,cache:list=None):
     if args:url, domain, cache = args
 
     try:
-        Respons = get(url=url, timeout=20, verify=False, allow_redirects=True, headers={'user-agent':UserAgent})
+        Respons = get(url=url, timeout=3, verify=False, allow_redirects=True, headers={'user-agent':UserAgent})
 
         try:title = BeautifulSoup(Respons.text, 'lxml').findAll('title')[0].text 
         except: title = ''
-        SaveOutput(f'{Respons.url} [ {Respons.status_code} ] [ {len(Respons.text)} ] [ {title} ] ',  extract(domain).domain+'-details.txt')
+        SaveOutput(f'{Respons.url} [ {Respons.status_code} ] [ {len(Respons.text)} ] [ {title} ] ',  extract(domain).fqdn+'-details.txt')
 
         if Respons.status_code != 200: return list()
 
@@ -155,7 +155,7 @@ def main(target:str):
     domain = target
 
     while True:
-        with ProcessPoolExecutor(max_workers=20) as e:
+        with ProcessPoolExecutor(max_workers=25) as e:
             for Link in WalletUrls:
                 [Registry.append(rLINK) for rLINK in e.submit(process, args=[Link,domain,Cache]).result()]
                 [Cache.append(_) if _ not in Cache else None for _ in Registry]
