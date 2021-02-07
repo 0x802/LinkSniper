@@ -25,9 +25,9 @@ def SaveOutput(data:str, filename:str):
 def chack(url:str,domain:str):
     
     try:
-        if domain in '.'.join([extract(url).domain, extract(url).suffix]):return True
+        if domain in extract(url).fqdn:return True
         else:return False
-    except Exception as err:return None
+    except Exception:return None
 
 def black_list(src:str, status:str):
     if not src:return False
@@ -43,7 +43,6 @@ def black_list(src:str, status:str):
         else:
             if src[0:11] == 'javascript:':return True
             elif src[0] == '#':return True
-
     return False
 
 def clear(data:str):
@@ -53,7 +52,6 @@ def clear(data:str):
 def get_urls(Data:str, domain:str, cache:list):
     if not Data:return list()
     URLS = []
-    domain_d  = extract(domain).domain
     domain_ds = '.'.join([extract(domain).domain,extract(domain).suffix])
 
     html     = BeautifulSoup(Data,'lxml')
